@@ -9,10 +9,7 @@
 namespace  fs = std::experimental::filesystem;
 
 
-// declarations
-void usage();
 std::string extract_section(const fs::path& path, const std::string& section_start, const std::string& section_end);
-
 
 int main(int argc, char* argv[])
 {	
