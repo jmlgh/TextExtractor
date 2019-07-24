@@ -73,8 +73,8 @@ std::string extract_section(const fs::path& path, const std::string& section_sta
 
   auto user_extraction_option{assign_extraction_choice(section_end)};
   if (user_extraction_option == UserExtractChoice::INVALID_CHOICE) throw std::invalid_argument("ERROR:Specified extraction strategy is not valid");
-  int section_start_line_num{};
-  int section_end_line_num{};
+  int section_start_line_num{-1};
+  int section_end_line_num{-1};
   
   if(!file.is_open())
     throw std::invalid_argument("ERROR::Failed to open the specified file");
@@ -105,17 +105,23 @@ std::string extract_section(const fs::path& path, const std::string& section_sta
       section_end_line_num = counter--;
   }
 
-  std::cout << "start " << section_start_line_num << std::endl;
-  std::cout << "end " << section_end_line_num << std::endl;
+  // if the section_start_line_num is -1, no section was found so return an empty string
+  if (section_start_line_num == -1) {
+    return std::string("");
+  }
+  
   std::string fulltext{};
-  if (user_extraction_option == UserExtractChoice::SPECIFIED_LINE || user_extraction_option == UserExtractChoice::END_OF_FILE) {
+  if (user_extraction_option == UserExtractChoice::SPECIFIED_LINE) {
     for (auto i = section_start_line_num + 1; i < section_end_line_num; i++) {
-      fulltext.append(section_lines[i]);
+      fulltext.append("\n").append(section_lines[i]);
+    }
+  } else if (user_extraction_option == UserExtractChoice::END_OF_FILE) {
+    for (auto i = section_start_line_num; i < section_end_line_num; i++) {
+      fulltext.append("\n").append(section_lines[i]);
     }
   } else {
     fulltext.append(section_lines[section_start_line_num]);
   }
-  
   return fulltext;
 }
 
