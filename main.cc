@@ -28,6 +28,10 @@ int main(int argc, char* argv[])
     if (argc != 4)
     {
         std::cout << "Usage: textex <file_path> <section_start> <section_end>\n" << std::endl;
+	std::cout << "<section_end> can have the following values:" << std::endl;
+	std::cout << "* l: from section_start to end of line" << std::endl;
+	std::cout << "* e: from section start to end of file" << std::endl;
+	std::cout << "* any string of variable length to mark the section_end line" << std::endl;
         return -1;
     }
     
@@ -50,7 +54,7 @@ int main(int argc, char* argv[])
 UserExtractChoice assign_extraction_choice(const std::string& end_line)
 {
   if (end_line.length() == 1) {
-    if (end_line == "s" || end_line == "S")
+    if (end_line == "l" || end_line == "L")
       return UserExtractChoice::SAME_LINE;
     else if (end_line == "e" || end_line == "E")
       return UserExtractChoice::END_OF_FILE;
